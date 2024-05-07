@@ -1,4 +1,4 @@
-# tensor
+# tnsrio
 
 ### a tensorflow.js + redis implementation
 
