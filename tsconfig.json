@@ -1,30 +1,26 @@
 {
   "compileOnSave": false,
-  "include": ["./**/*.ts"],
-  "exclude": ["node_modules"],
   "compilerOptions": {
-    "outDir": "./dist",
+    "outDir": "dist",
     "sourceMap": false,
     "declaration": true,
-    "moduleResolution": "Bundler",
-    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "module": "es2022",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "esModuleInterop": true,
-    "target": "ESNext",
+    "target": "es2022",
     "allowJs": true,
     "resolveJsonModule": true,
     "downlevelIteration": true,
+    "skipLibCheck": true,
     "typeRoots": [
       "node_modules/@types"
     ],
-    "lib": [],
-    "baseUrl": "./",
-    "paths": {
-      "@core/*": ["core/*"],
-      "@common/*": ["common/*"],
-      "@tensor/*": ["common/tensor/*"],
-      "@toolset/*": ["toolset/*"]
-    }
+    "lib": [
+      "dom",
+      "es2022"
+    ],
+    "baseUrl": "."
   }
 }

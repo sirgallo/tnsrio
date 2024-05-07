@@ -15,8 +15,8 @@ type EnvValue<T extends EnvironementKey> =
 
 const envValueValidator = <T extends EnvironementKey>(envKey: T): EnvValue<T> => {
   if (envKey === 'TENSOR_DB_HOST') return (env[envKey] ?? 'localhost') as EnvValue<T>;
-  if (envKey === 'TENSOR_DB_PORT') return (parseInt(env[envKey]) ?? 6379) as EnvValue<T>;
-  if (envKey === 'TENSOR_DB_USER') return parseInt(env[envKey] ?? 'tensor_dev_user') as EnvValue<T>;
+  if (envKey === 'TENSOR_DB_PORT') return parseInt(env[envKey] ?? '6379') as EnvValue<T>;
+  if (envKey === 'TENSOR_DB_USER') return (env[envKey] ?? 'tensor_dev_user') as EnvValue<T>;
   if (envKey === 'TENSOR_DB_PASS') return (env[envKey] ?? 'tensor_dev_pass') as EnvValue<T>;
 
   return env[envKey] as EnvValue<T>;

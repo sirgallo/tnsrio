@@ -1,7 +1,7 @@
 import { createCipheriv, createDecipheriv, Encoding } from 'crypto';
 
-import { LogProvider } from '@core/providers/LogProvider';
-import { extractErrorMessage } from '@core/utils/Utils';
+import { LogProvider } from '../LogProvider.js';
+import { extractErrorMessage } from '../../core/utils/Utils.js';
 
 
 const zLog = new LogProvider('Encryption Utils');

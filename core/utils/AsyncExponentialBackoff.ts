@@ -1,6 +1,6 @@
-import { LogProvider } from '@core/providers/LogProvider';
-import { sleep, extractErrorMessage } from '@core/utils/Utils';
-import { AsyncExponentialBackoff, BackoffRequestType } from '@core/types/AsyncExponentialBackoff';
+import { LogProvider } from '../LogProvider.js';
+import { sleep, extractErrorMessage } from '../../core/utils/Utils.js';
+import { AsyncExponentialBackoff, BackoffRequestType } from './types/AsyncExponentialBackoff.js';
 
 
 const zLog = new LogProvider('Async Exponential Backoff');

@@ -8,6 +8,8 @@ services:
     build:
       context: .
       dockerfile: ./service/redis/Dockerfile.redis
+    ports:
+      - '6379:6379'
     volumes:
       - $HOME/tensor/tensordb:/data  # Bind mount a volume from host ./data/redis to container /data
 

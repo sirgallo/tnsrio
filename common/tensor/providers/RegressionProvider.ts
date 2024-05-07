@@ -1,4 +1,4 @@
-import { TensorflowProvider } from 'common/tensor/providers/TensorflowProvider';
+import { TensorflowProvider } from './TensorflowProvider.js';
 
 
 export class RegressionProvider {

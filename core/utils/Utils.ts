@@ -1,7 +1,8 @@
 import { freemem } from 'os';
 import lodash from 'lodash';
-import { ISODateString } from '@core/types/ISODate';
 const { isEqual } = lodash;
+
+import { ISODateString } from './types/ISODate.js';
 
 
 export const toMs = {
