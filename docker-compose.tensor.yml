@@ -1,9 +1,9 @@
 version: "3"
 
 services:
-  tensordb:
-    image: tensordb_img
-    container_name: tensordb
+  tnsriodb:
+    image: tnsriodb_img
+    container_name: tnsriodb
     hostname: ${HOSTNAME}
     build:
       context: .
@@ -11,7 +11,7 @@ services:
     ports:
       - '6379:6379'
     volumes:
-      - $HOME/tensor/tensordb:/data  # Bind mount a volume from host ./data/redis to container /data
+      - $HOME/tnsrio/tnsriodb:/data  # Bind mount a volume from host ./data/redis to container /data
 
 networks:
   data_layer:
