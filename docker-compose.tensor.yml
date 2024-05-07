@@ -1,0 +1,16 @@
+version: "3"
+
+services:
+  tensordb:
+    image: tensordb_img
+    container_name: tensordb
+    hostname: ${HOSTNAME}
+    build:
+      context: .
+      dockerfile: ./service/redis/Dockerfile.redis
+    volumes:
+      - $HOME/tensor/tensordb:/data  # Bind mount a volume from host ./data/redis to container /data
+
+networks:
+  data_layer:
+    driver: bridge

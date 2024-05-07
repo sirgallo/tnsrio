@@ -1,0 +1,30 @@
+{
+  "compileOnSave": false,
+  "include": ["./**/*.ts"],
+  "exclude": ["node_modules"],
+  "compilerOptions": {
+    "outDir": "./dist",
+    "sourceMap": false,
+    "declaration": true,
+    "moduleResolution": "Bundler",
+    "module": "ESNext",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "esModuleInterop": true,
+    "target": "ESNext",
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "downlevelIteration": true,
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "lib": [],
+    "baseUrl": "./",
+    "paths": {
+      "@core/*": ["core/*"],
+      "@common/*": ["common/*"],
+      "@tensor/*": ["common/tensor/*"],
+      "@toolset/*": ["toolset/*"]
+    }
+  }
+}
