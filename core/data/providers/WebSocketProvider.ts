@@ -1,7 +1,7 @@
 import { EventEmitter } from 'events';
 import WebSocket from 'websocket';
 
-import { LogProvider } from '../../LogProvider.js';
+import { LogProvider } from '../../log/LogProvider.js';
 import { WebSocketOpts } from '../types/WebSocket.js';
 
 

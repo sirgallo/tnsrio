@@ -1,4 +1,4 @@
-import { Redis, RedisOptions } from 'ioredis';
+import { Redis } from 'ioredis';
 
 import { RedisProvider } from './RedisProvider.js';
 import { MemcacheOpts } from '../types/Memcache.js';
@@ -6,27 +6,14 @@ import { MemcacheOpts } from '../types/Memcache.js';
 
 export class MemcacheProvider<T extends string, V extends { [field: string]: any }> {
   private redisClient: Redis;
-  private prefix: string;
-  private expirationInSec: number;
-
-  constructor(
-    opts: { cacheOpts: MemcacheOpts<T>, redisOpts?: RedisOptions }
-  ) {
-    this.prefix = opts.cacheOpts.prefix;
-    this.expirationInSec = opts.cacheOpts.expirationInSec;
-    this.redisClient = new RedisProvider(opts.redisOpts).getClient({ 
-      service: 'memcache',
-      db: opts.cacheOpts.cacheName 
-    });
+  constructor(private opts: MemcacheOpts<T>) {
+    this.redisClient = new RedisProvider(opts.redisOpts).getClient({ service: 'memcache', db: opts.cacheName });
   }
-
-  prefixedKey = (key: string): string => `${this.prefix}:${key}`;
 
   async set(key: string, value: string): Promise<boolean> {
     const prefixedKey = this.prefixedKey(key);
     await this.redisClient.set(prefixedKey, value);
-    if (this.expirationInSec) this.redisClient.expire(prefixedKey, this.expirationInSec);
-    
+    if (this.opts.expirationInSec) await this.redisClient.expire(prefixedKey, this.opts.expirationInSec);
     return true;
   }
 
@@ -56,7 +43,6 @@ export class MemcacheProvider<T extends string, V extends { [field: string]: any
   async hgetall(key: string): Promise<V> {
     const prefixedKey = this.prefixedKey(key);
     const value = await this.redisClient.hgetall(prefixedKey);
-    
     return value as V;
   }
 
@@ -64,4 +50,6 @@ export class MemcacheProvider<T extends string, V extends { [field: string]: any
     this.redisClient.flushdb();
     return true;
   }
+
+  private prefixedKey = (key: string): string => `${this.opts.prefix}:${key}`;
 }

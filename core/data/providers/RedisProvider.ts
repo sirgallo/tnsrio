@@ -26,7 +26,6 @@ export class RedisProvider {
   async removeClient<T extends RedisService>(opts: ClientOpts<T>): Promise<boolean> {
     const validatedDb = this.validatedDb(opts);
     const existingClient = this.clientMap.get(validatedDb);
-    
     if (! existingClient) return true;
 
     await existingClient.quit()

@@ -1,4 +1,4 @@
-import { ROUTE, STATUSOK, INFO } from '../../core/Log';
+import { ROUTE, STATUSOK, INFO } from '../../core/log/Log';
 import { BaseRoute } from '../types/RouteMappings';
 
 
@@ -6,11 +6,10 @@ type GlobalPollRoute = 'poll';
 type GlobalPollRouteSubRoutes = 'root';
 
 /*
-  routeMappings
-
-  single Source of truth for all routes, with all subRoutes and custom Logs defined here.
-  can have multiple routeMappings per project.
-  base project will always have a poll route for health checks.
+  routeMappings:
+    single source of truth for all routes, with all subRoutes and custom logs defined here.
+    can have multiple routeMappings per project.
+    base project will always have a poll route for health checks.
 */
 export const routeMappings: { [route in GlobalPollRoute]: BaseRoute<route, GlobalPollRouteSubRoutes> } = {
   poll: {

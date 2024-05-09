@@ -1,14 +1,14 @@
 import { Request, Response, NextFunction } from 'express';
 
-import { LogProvider } from '../../core/LogProvider';
+import { LogProvider } from '../../core/log/LogProvider';
 import { Route, RouteOpts } from '../Route';
 import { routeMappings } from '../configs/RouteMappings';
 
 
 /*
   PollRoute:
-    health check endpoint.
-    return response if alive.
+    1.) health check endpoint.
+    2.) return response if alive
 */
 export class PollRoute extends Route {
   private log: LogProvider = new LogProvider(PollRoute.name);

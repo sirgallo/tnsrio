@@ -10,13 +10,13 @@ then
   echo "starting services for the first time"
   
   export HOSTNAME
-  docker-compose -f docker-compose.tnsrio.yml up --build
+  docker-compose -f docker-compose.tnsrio.cpu.yml up --build
 elif [ "$startServices" == "no" ]
 then
   echo "restarting services..."
   
   export HOSTNAME
-  docker-compose -f docker-compose.tnsrio.yml up
+  docker-compose -f docker-compose.tnsrio.cpu.yml up
 else
   echo truthyInput
 fi

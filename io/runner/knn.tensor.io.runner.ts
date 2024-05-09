@@ -1,8 +1,8 @@
 import { TensorIO, tensorIORunner } from '../tensor.io.js';
-import { TensorIOOpts, TENSOR_IO_RUNNER_RESULTS_REGISTRY } from '../tensor.io.types.js';
+import { TENSOR_IO_RUNNER_RESULTS_REGISTRY } from '../tensor.io.types.js';
 
 
-export class KNNIO extends TensorIO<TENSOR_IO_RUNNER_RESULTS_REGISTRY['knn']> {
+class KNNIORunner extends TensorIO<TENSOR_IO_RUNNER_RESULTS_REGISTRY['knn']> {
   constructor() { super(); }
 
   async runIO(): Promise<TENSOR_IO_RUNNER_RESULTS_REGISTRY['knn']> {
@@ -11,8 +11,6 @@ export class KNNIO extends TensorIO<TENSOR_IO_RUNNER_RESULTS_REGISTRY['knn']> {
 }
 
 
-const ioOPts: TensorIOOpts<TENSOR_IO_RUNNER_RESULTS_REGISTRY['knn']> = {
-  ioRunner: new KNNIO()
-};
-
-tensorIORunner(ioOPts);
+tensorIORunner({ 
+  ioRunner: new KNNIORunner()
+});

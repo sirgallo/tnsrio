@@ -38,6 +38,7 @@ export type ETCDDataProcessingOpts<V, K extends string, PRF = unknown, TYP exten
 
 export type GetAllResponse<V, K extends string, PRF = unknown> = { [key in keyof Etcd3PrefixedKey<K, PRF>]: V };
 
+
 export const ELECTION_EVENTS: { [event in ElectionEvent]: event } = { elected: 'elected' };
 export const WATCH_EVENTS: { [event in WatchEvent]: event } = { data: 'data', delete: 'delete', put: 'put' };
 

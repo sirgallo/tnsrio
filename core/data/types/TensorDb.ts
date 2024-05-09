@@ -15,6 +15,7 @@ export interface TensorData {
 
 export type TensorMetadata = { [prop: string]: string | number };
 
+
 export type TensorOperation = 'AI.TENSORSET' | 'AI.TENSORGET';
 export type TensorMetadataOperation = 'METADATA.SET' | 'METADATA.GET';
 
@@ -79,10 +80,11 @@ export type ExecTensorResponse<
 type TensorConstants = {
   OP: TensorDbOperationMap;
   CMD: { [cmd: string]: string };
-  PREFIX: { [prefix: string]: string }
+  PREFIX: { [prefix: string]: string };
   LUA: { [script in TensorOperation]: string };
   TYPE: TensorTypeMap;
 }
+
 
 export const TENSOR_CONSTANTS: TensorConstants = {
   OP: {
@@ -96,12 +98,12 @@ export const TENSOR_CONSTANTS: TensorConstants = {
   LUA: {
     'AI.TENSORSET': null,
     'AI.TENSORGET': `
-      local results = {}
-      for i, key in ipairs(KEYS) do
-        local tensor = redis.call('AI.TENSORGET', key, 'VALUES')
-        table.insert(results, tensor)
-      end
-      return results
+    local results = {}
+    for i=1,#KEYS do
+      local tensor = redis.call('AI.TENSORGET', KEYS[i], 'VALUES')
+      table.insert(results, tensor)
+    end
+    return results
     `
   },
   TYPE: { DOUBLE: 'DOUBLE', INT: 'INT', FLOAT: 'FLOAT' }

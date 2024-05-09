@@ -2,8 +2,10 @@ import { Response, Router, Request, NextFunction } from 'express';
 import { join } from 'path';
 
 
-// Route:
-//  all routes need to extend this class
+/*
+  Route:
+    all routes need to extend this class.
+*/
 export abstract class Route {
   protected _router: Router;
   protected _rootpath: string;

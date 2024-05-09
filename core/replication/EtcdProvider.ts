@@ -7,20 +7,20 @@ import {
 import lodash from 'lodash';
 const { transform } = lodash; 
 
-import { LogProvider } from '../../LogProvider.js';
-import { EtcdModel, ValueSerializer } from '../types/EtcdModel.js';
+import { LogProvider } from '../log/LogProvider.js';
+import { EtcdModel, ValueSerializer } from './EtcdModel.js';
 import { 
   ElectionEvent, ElectionListener, WatchEvent, WatchListener,
   InitWatchOpts, WatchEventData, CreateLeaseOptions, GetAllResponse,
   ELECTION_EVENTS, WATCH_EVENTS, ELECTION_ERROR_TIMEOUT_IN_MS, ETCDDataProcessingOpts
-} from '../types/Etcd.js';
+} from './Etcd.js';
 
 
 const HOSTNAME = hostname();
 
 export class ETCDProvider extends EventEmitter {
   private client: Etcd3;
-  private zLog: LogProvider = new LogProvider(ETCDProvider.name);
+  private zLog = new LogProvider(ETCDProvider.name);
 
   constructor(private hostname = HOSTNAME, private opts = DEFAULT_OPTS) { 
     super();

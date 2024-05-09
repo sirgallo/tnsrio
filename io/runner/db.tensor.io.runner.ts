@@ -1,31 +1,57 @@
+import { TensorData } from '../../core/data/types/TensorDb.js';
+
 import { TensorIO, tensorIORunner } from '../tensor.io.js';
-import { TensorIOOpts, TENSOR_IO_RUNNER_RESULTS_REGISTRY } from '../tensor.io.types.js';
+import { TENSOR_IO_RUNNER_RESULTS_REGISTRY } from '../tensor.io.types.js';
 import { generateRandomTensorData } from '../mock/tensor.io.data.js';
 
 
-export class DBIORunner extends TensorIO<TENSOR_IO_RUNNER_RESULTS_REGISTRY['db']> {
+class DBIORunner extends TensorIO<TENSOR_IO_RUNNER_RESULTS_REGISTRY['db']> {
   constructor() { super() }
 
   async runIO(): Promise<TENSOR_IO_RUNNER_RESULTS_REGISTRY['db']> {
-    await this.insertMockData();
+    const tensors = await this.setMockData();
+    await this.getMockData(tensors);
+    await this.getMockDataLua(tensors);
+    
     return true;
   }
 
-  async insertMockData() {
+  private async setMockData() {
     try {
       const tensors = generateRandomTensorData(10, [10, 10])
       await this.tensorDb.exec<'AI.TENSORSET'>({ tensors, tensorType: 'FLOAT' });
-      
-      this.zLog.info('mock data successfully inserted');
-      return true;
-    } catch (error) {
-        console.error('Failed to insert mock data:', error);
+      console.log('mock data successfully inserted -->', tensors);
+      return tensors;
+    } catch (err) {
+      console.error('Failed to insert mock tensors:', err);
+      throw err;
+    }
+  }
+
+  private async getMockData(tensors: TensorData[]) {
+    try {
+      const res = await this.tensorDb.exec<'AI.TENSORGET'>({ keys: tensors.map(t => t.k) });
+      console.log('results from get mock tensors -->', res);
+      return tensors;
+    } catch (err) {
+      console.error('Failed to get mock tensors:', err);
+      throw err;
+    }
+  }
+
+  private async getMockDataLua(tensors: TensorData[]) {
+    try {
+      const res = await this.tensorDb.exec<'AI.TENSORGET'>({ keys: tensors.map(t => t.k), preprocess: true });
+      console.log('results from get mock tensors using lua -->', res);
+      return tensors;
+    } catch (err) {
+      console.error('Failed to get mock tensors:', err);
+      throw err;
     }
   }
 }
 
-const opts: TensorIOOpts<TENSOR_IO_RUNNER_RESULTS_REGISTRY['db']> = { 
-  ioRunner: new DBIORunner()
-};
 
-tensorIORunner(opts);
+tensorIORunner({ 
+  ioRunner: new DBIORunner()
+});

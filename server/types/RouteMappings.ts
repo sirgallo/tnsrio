@@ -1,4 +1,4 @@
-import { CustomMessage, CustomMessagePayload } from '../../core/Log';
+import { CustomMessage, CustomMessagePayload } from '../../core/log/Log';
 
 
 export type Route<T extends string, V extends string> = { 

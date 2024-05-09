@@ -1,0 +1,14 @@
+FROM redislabs/redisai:1.2.7-cpu-bionic
+
+RUN apt-get update && apt-get install -y wget ca-certificates
+
+COPY ./service/redis/conf/redis.conf /usr/local/etc/redis/redis.conf
+
+
+RUN bash /usr/lib/redis/modules/redisai/get_deps.sh
+RUN make -C /usr/lib/redis/modules/redisai/opt clean ALL=1
+RUN make -C /usr/lib/redis/modules/redisai/opt
+
+EXPOSE 6379
+
+CMD [ "redis-server", "/usr/local/etc/redis/redis.conf", "--loadmodule", "/usr/lib/redis/modules/redisai/redisai.so" ]

@@ -2,33 +2,25 @@ import { Redis, RedisValue } from 'ioredis';
 
 import { RedisProvider } from './RedisProvider.js';
 import { MemcacheProvider } from './MemcacheProvider.js';
-import { LogProvider } from '../../LogProvider.js';
+import { LogProvider } from '../../log/LogProvider.js';
+import { NodeUtil } from '../../utils/Node.js';
 import { 
-  TensorData, TensorDbOpts, TensorOperation, TensorType,
-  TensorMetadataOperation, ExecTensorResponse, ExecTensorOpts,
-  TENSOR_CONSTANTS,
-  TensorMetadata
+  TensorData, TensorDbOpts, TensorOperation, TensorType, TensorMetadata,
+  TensorMetadataOperation, ExecTensorResponse, ExecTensorOpts, TENSOR_CONSTANTS
 } from '../types/TensorDb.js';
-import { extractErrorMessage } from '../../utils/Utils.js';
 
 
 export class TensorDbProvider {
   private redisClient: Redis;
   private memcache: MemcacheProvider<typeof TENSOR_CONSTANTS.PREFIX.METADATA, TensorMetadata>;
-  private zLog: LogProvider = new LogProvider(TensorDbProvider.name);
+  private zLog = new LogProvider(TensorDbProvider.name);
 
   constructor(opts: TensorDbOpts) {
-    this.redisClient = new RedisProvider(opts.redisOpts).getClient({
-      service: 'vector',
-      db: opts.dbName 
-    });
-
-    this.memcache = new MemcacheProvider({ 
-      cacheOpts: { 
-        cacheName: 'tensorcache',
-        prefix: TENSOR_CONSTANTS.PREFIX.METADATA,
-        expirationInSec: 10000
-      }, 
+    this.redisClient = new RedisProvider(opts.redisOpts).getClient({ service: 'vector', db: opts.dbName });
+    this.memcache = new MemcacheProvider({
+      cacheName: 'tensorcache',
+      prefix: TENSOR_CONSTANTS.PREFIX.METADATA,
+      expirationInSec: 10000,
       redisOpts: opts.redisOpts 
     });
   }
@@ -41,7 +33,7 @@ export class TensorDbProvider {
       
       return this._getTensorMetadata(opts) as Promise<ExecTensorResponse<T>>;
     } catch (err) {
-      this.zLog.error(`err: ${extractErrorMessage(err)}`);
+      this.zLog.error(`err: ${NodeUtil.extractErrorMessage(err)}`);
       throw err;
     }
   }
@@ -58,10 +50,12 @@ export class TensorDbProvider {
     if (! opts.preprocess) {
       const pipeline = this.redisClient.pipeline();
       for (const k of opts.keys) { pipeline.call(...TensorDbCommandGenerator.TENSORGET(k)); }
-      return (await pipeline.exec()).map(res => res[1]) as TensorData['v'];
+      const result = await pipeline.exec();
+      console.log('result in get:', result);
+      return result.map(res => res[1]) as TensorData['v'];
     }
     
-    return this.redisClient.call(...TensorDbCommandGenerator.TENSORGETLUA(opts.keys)) as Promise<ExecTensorResponse<'AI.TENSORGET'>>;
+    return this.redisClient.eval(...TensorDbCommandGenerator.TENSORGETLUA(opts.keys)) as Promise<ExecTensorResponse<'AI.TENSORGET'>>;
   }
 
   private async __setTensorMetadata(opts: ExecTensorOpts<'METADATA.SET'>): Promise<ExecTensorResponse<'METADATA.SET'>> {
@@ -81,10 +75,10 @@ class TensorDbCommandGenerator {
   }
 
   static TENSORGET = (k: string): [ string, RedisValue[] ] => {
-    return [ TENSOR_CONSTANTS.OP['AI.TENSORGET'], [ k, TENSOR_CONSTANTS.CMD.VALUES ] ]
+    return [ TENSOR_CONSTANTS.OP['AI.TENSORGET'], [ k, TENSOR_CONSTANTS.CMD.VALUES ] ];
   }
 
-  static TENSORGETLUA = (keys: string[]): [ string, RedisValue[] ] => {
-    return [ TENSOR_CONSTANTS.LUA['AI.TENSORGET'], [ keys.length, ...keys ] ]
+  static TENSORGETLUA = (keys: string[]): [ string, number, ...string[] ] => {
+    return [ TENSOR_CONSTANTS.LUA['AI.TENSORGET'], keys.length, ...keys ];
   }
 }

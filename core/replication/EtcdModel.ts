@@ -1,4 +1,4 @@
-import { InferType } from '../../utils/types/Infer.js';
+import { InferType } from '../types/Infer.js';
 
 
 export type Etcd3PrefixedKey<K extends string, PRF = unknown> = 
@@ -11,6 +11,7 @@ interface __baseEtcModel<V, K extends string, PRF = unknown> {
 
 export type EtcdModel<V, K extends string, PRF = unknown> =
   PRF extends string ? __baseEtcModel<V, K, PRF> & { Prefix: PRF } : __baseEtcModel<V, K, PRF>;
+
 
 export class ValueSerializer {
   static serialize = <V, K extends string, PRF = unknown>(value: EtcdModel<V, K, PRF>['ValueType']): Buffer => {
